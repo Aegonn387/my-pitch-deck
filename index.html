@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xure Labs - Investment Pitch Deck</title>
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #0f4c75;
+            --highlight: #3282b8;
+            --light: #bbe1fa;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        .pitch-deck {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .page {
+            width: 100%;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-content {
+            max-width: 800px;
+            width: 100%;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--light);
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--highlight);
+        }
+
+        .page-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--light);
+        }
+
+        .page-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .highlight {
+            color: var(--highlight);
+            font-weight: 600;
+        }
+
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 2rem 0;
+        }
+
+        .stat-box {
+            background: var(--secondary);
+            border-radius: 10px;
+            padding: 20px;
+            width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--highlight);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--light);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--secondary);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--highlight);
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .phase-container {
+            width: 100%;
+            margin: 2rem 0;
+        }
+
+        .phase {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .phase:not(:last-child):after {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 50px;
+            bottom: -30px;
+            width: 2px;
+            background: var(--accent);
+        }
+
+        .phase-number {
+            background: var(--accent);
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        .phase-content {
+            flex: 1;
+            text-align: left;
+            padding-bottom: 10px;
+        }
+
+        .phase-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .phase-list {
+            list-style-type: none;
+        }
+
+        .phase-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .phase-list li:before {
+            content: '•';
+            color: var(--highlight);
+            position: absolute;
+            left: 0;
+        }
+
+        .funds-breakdown {
+            width: 100%;
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+
+        .fund-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .fund-percentage {
+            font-weight: 700;
+            color: var(--highlight);
+        }
+
+        .contact-info {
+            margin: 2rem 0;
+        }
+
+        .contact-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-icon {
+            margin-right: 10px;
+            color: var(--highlight);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: var(--highlight);
+            transform: scale(1.1);
+        }
+
+        .page-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .page-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .page-text {
+                font-size: 1rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat-box {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pitch-deck">
+        <!-- Page 1: Introduction -->
+        <section class="page" id="page1">
+            <div class="page-content">
+                <h1 class="page-title">Xure Labs</h1>
+                <p class="page-subtitle">Pioneering, Onboarding and Innovating Tokenisation of RWA</p>
+                <p class="page-text"><em>On Pi Network</em></p>
+            </div>
+        </section>
+
+        <!-- Page 2: The Illiquidity Trap -->
+        <section class="page" id="page2">
+            <div class="page-content">
+                <h2 class="page-title">The Illiquidity Trap</h2>
+                <p class="page-text">Trillion-dollar asset classes like <span class="highlight">real estate, infrastructure, and creative works</span> remain locked away—accessible only to institutional investors and the ultra-wealthy.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🚫</div>
+                        <h3 class="feature-title">Inaccessible</h3>
+                        <p>High capital requirements exclude 95% of potential investors</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3 class="feature-title">Opaque</h3>
+                        <p>Lack of transparency creates trust barriers and inefficiencies</p>
+                    </div>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <div class="stat-value">$16T</div>
+                        <div class="stat-label">Tokenisation Market</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">Still Stuck in Web2</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 3: The Pi Network Opportunity -->
+        <section class="page" id="page3">
+            <div class="page-content">
+                <h2 class="page-title">The Pi Network Opportunity</h2>
+                <p class="page-text">With millions of engaged users and a growing ecosystem, Pi Network represents the next frontier in blockchain adoption.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🌐</div>
+                        <h3 class="feature-title">Massive User Base</h3>
+                        <p>Millions of active Pi users ready for innovative dApps</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3 class="feature-title">KYC-Verified Users</h3>
+                        <p>Strict identity verification ensures real users, real engagement</p>
+                    </div>
+                </div>
+                
+                <p class="page-text">Pi Network's adoption of Smart Contracts means Xure Labs gets even closer to the goal of transitioning real world assets and applications into Web3.</p>
+            </div>
+        </section>
+
+        <!-- Page 4: Introducing Aura -->
+        <section class="page" id="page4">
+            <div class="page-content">
+                <h2 class="page-title">Introducing Aura</h2>
+                <p class="page-subtitle">Our Flagship Pi Application</p>
+                <p class="page-text">A revolutionary creator marketplace that demonstrates our tokenisation expertise while serving the Pi ecosystem.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎵</div>
+                        <h3 class="feature-title">Digital Assets Tokenization</h3>
+                        <p>Transforming audio content into tradable digital assets with relatable revenue models</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💎</div>
+                        <h3 class="feature-title">Creator Empowerment</h3>
+                        <p>Direct artist-to-fan relationships with transparent Pi blockchain-based revenue sharing</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3 class="feature-title">Pi-First Strategy</h3>
+                        <p>Built exclusively for Pi Network to drive ecosystem growth and token utility</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3 class="feature-title">Security</h3>
+                        <p>Pi SDK authentication guarantees smooth logins and simplified profile setups</p>
+                    </div>
+                </div>
+                
+                <p class="page-text"><em>Currently in development</em></p>
+            </div>
+        </section>
+
+        <!-- Page 5: The Aura Experience -->
+        <section class="page" id="page5">
+            <div class="page-content">
+                <h2 class="page-title">The Aura Experience</h2>
+                <p class="page-text">A seamless platform that demonstrates our tokenization capabilities while serving real user needs.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3 class="feature-title">Create & Tokenize</h3>
+                        <p>Artists transform audio content into blockchain-based digital assets</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">Monetize</h3>
+                        <p>Multiple revenue streams including NFT sales, ad revenue sharing, royalties, and secondary sales</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">Engage</h3>
+                        <p>Free users preview content with ad-supported streaming options</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">Scale</h3>
+                        <p>AI-powered creator tools, expanded digital assets, and future video content</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 6: Dual-Pronged Business Strategy -->
+        <section class="page" id="page6">
+            <div class="page-content">
+                <h2 class="page-title">Dual-Pronged Business Strategy</h2>
+                <p class="page-text">Building immediate stealth through Aura while positioning for massive RWA tokenization opportunities.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3 class="feature-title">Aura Platform Revenue</h3>
+                        <p>NFT marketplace fees, subscription revenue, advertising share (60%)</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">RWA Tokenization Services</h3>
+                        <p>Enterprise-grade tokenization platform fees for real estate, infrastructure, and creative assets</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">Technology Licensing</h3>
+                        <p>White-label solutions for businesses transitioning from Web2 to Web3</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">Strategic Partnerships</h3>
+                        <p>Joint ventures with asset owners and traditional businesses entering blockchain</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 7: Strategic Growth Path -->
+        <section class="page" id="page7">
+            <div class="page-content">
+                <h2 class="page-title">Strategic Growth Path</h2>
+                <p class="page-text">From Pi Network applications to global RWA tokenization leadership.</p>
+                
+                <div class="phase-container">
+                    <div class="phase">
+                        <div class="phase-number">1</div>
+                        <div class="phase-content">
+                            <h3 class="phase-title">PHASE 1: FOUNDATION (Now - 6 months)</h3>
+                            <ul class="phase-list">
+                                <li>Launch Aura MVP on Pi Network</li>
+                                <li>Monitor traction and user engagement</li>
+                                <li>Seamless Pi authentication and payment integration</li>
+                                <li>Secure smart contracts for purchases, mints, and royalties</li>
+                                <li>Plan Aura utility token development</li>
+                                <li>Build core technology stack</li>
+                                <li>Establish market presence</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="phase">
+                        <div class="phase-number">2</div>
+                        <div class="phase-content">
+                            <h3 class="phase-title">PHASE 2: EXPANSION (6-18 months)</h3>
+                            <ul class="phase-list">
+                                <li>Scale Aura with additional features</li>
+                                <li>Launch more utility applications for Pi</li>
+                                <li>Conduct RWA tokenization hackathons</li>
+                                <li>Establish partnerships for decentralization in Africa</li>
+                                <li>Begin RWA tokenization pilots</li>
+                                <li>Secure enterprise partnerships</li>
+                                <li>Team expansion and brand upgrades</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="phase">
+                        <div class="phase-number">3</div>
+                        <div class="phase-content">
+                            <h3 class="phase-title">PHASE 3: TRANSFORMATION (18-36 months)</h3>
+                            <ul class="phase-list">
+                                <li>Become leading RWA tokenization platform</li>
+                                <li>Expand to real estate and infrastructure</li>
+                                <li>Launch proprietary token on Pi Network</li>
+                                <li>Establish global market presence</li>
+                                <li>Onboard more pioneers to Pi Network</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 8: Transforming Real-World Assets -->
+        <section class="page" id="page8">
+            <div class="page-content">
+                <h2 class="page-title">Transforming Real-World Assets</h2>
+                <p class="page-text">Our core mission: bridging the $16T traditional asset market with blockchain efficiency and accessibility.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🏠</div>
+                        <h3 class="feature-title">Real Estate</h3>
+                        <p>Fractional property ownership, commercial real estate tokenization, global property investment access</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">Infrastructure</h3>
+                        <p>Renewable energy projects, transportation assets, public infrastructure funding</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3 class="feature-title">Creative Assets</h3>
+                        <p>Music royalties, film and media rights, intellectual property monetization</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏭</div>
+                        <h3 class="feature-title">Business Assets</h3>
+                        <p>Supply chain financing, inventory tokenization, business equity fractionalization</p>
+                    </div>
+                </div>
+                
+                <p class="page-text">We're building the tools and platforms that will enable traditional businesses to migrate value and operations to Web3, creating unprecedented liquidity and access.</p>
+                <p class="page-text"><strong>Aura Creator's Marketplace in development</strong></p>
+            </div>
+        </section>
+
+        <!-- Page 9: Massive Addressable Markets -->
+        <section class="page" id="page9">
+            <div class="page-content">
+                <h2 class="page-title">Massive Addressable Markets</h2>
+                <p class="page-text">Positioned at the convergence of multiple high-growth opportunities.</p>
+                
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <div class="stat-value">$280T+</div>
+                        <div class="stat-label">Global Real Estate</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">$25B+</div>
+                        <div class="stat-label">Music & Audio Streaming</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">$10T+</div>
+                        <div class="stat-label">Infrastructure Assets</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">60M</div>
+                        <div class="stat-label">Pi Network Base</div>
+                    </div>
+                </div>
+                
+                <p class="page-text">While others focus on speculative assets, we're building practical solutions for real-world use cases with immediate revenue potential.</p>
+            </div>
+        </section>
+
+        <!-- Page 10: Investment Opportunity -->
+        <section class="page" id="page10">
+            <div class="page-content">
+                <h2 class="page-title">Investment Opportunity</h2>
+                <p class="page-text">We're seeking <span class="highlight">$300,000</span> to accelerate our dual-track strategy: launching Aura while building our RWA tokenization platform.</p>
+                
+                <div class="funds-breakdown">
+                    <h3 class="page-subtitle">Strategic Use of Funds</h3>
+                    
+                    <div class="fund-item">
+                        <span>Aura Development and Launch</span>
+                        <span class="fund-percentage">40%</span>
+                    </div>
+                    <div class="fund-item">
+                        <span>RWA Infrastructure Enhancement, R&D</span>
+                        <span class="fund-percentage">30%</span>
+                    </div>
+                    <div class="fund-item">
+                        <span>Business Development & Partnerships</span>
+                        <span class="fund-percentage">20%</span>
+                    </div>
+                    <div class="fund-item">
+                        <span>Redundancy</span>
+                        <span class="fund-percentage">10%</span>
+                    </div>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3 class="feature-title">Immediate Revenue</h3>
+                        <p>Through Aura platform with multiple monetization streams</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">Massive Upside</h3>
+                        <p>Positioned for the $16T+ RWA tokenization market</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">Real-World Solutions</h3>
+                        <p>Solving tangible problems with blockchain technology</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 11: Contact -->
+        <section class="page" id="page11">
+            <div class="page-content">
+                <h2 class="page-title">Let's Build the Future of Asset Ownership Together</h2>
+                
+                <div class="contact-info">
+                    <h3 class="page-subtitle">Pfano Michael Mukosi</h3>
+                    <p class="page-text">Founder & Director</p>
+                    <p class="page-text">Xure Labs</p>
+                    
+                    <div class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <span>aegon23@icloud.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📞</span>
+                        <span>079 5641 332</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">🏢</span>
+                        <span>Xure Labs PTY LTD</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>Reg: 2025/806033/07</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>Johannesburg, South Africa</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <div class="nav-btn" id="prev-btn">←</div>
+            <div class="nav-btn" id="next-btn">→</div>
+        </div>
+        
+        <div class="page-counter">
+            <span id="current-page-num">1</span> / 11
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pages = document.querySelectorAll('.page');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const currentPageNum = document.getElementById('current-page-num');
+            
+            let currentPage = 0;
+            
+            function updatePageIndicator() {
+                currentPageNum.textContent = currentPage + 1;
+            }
+            
+            function scrollToPage(pageIndex) {
+                if (pageIndex >= 0 && pageIndex < pages.length) {
+                    pages[pageIndex].scrollIntoView({ behavior: 'smooth' });
+                    currentPage = pageIndex;
+                    updatePageIndicator();
+                }
+            }
+            
+            prevBtn.addEventListener('click', function() {
+                scrollToPage(currentPage - 1);
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                scrollToPage(currentPage + 1);
+            });
+            
+            // Optional: Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    scrollToPage(currentPage - 1);
+                } else if (e.key === 'ArrowRight') {
+                    scrollToPage(currentPage + 1);
+                }
+            });
+            
+            // Optional: Add swipe navigation for mobile
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            document.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            
+            document.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+            
+            function handleSwipe() {
+                if (touchEndX < touchStartX - 50) {
+                    // Swipe left - next page
+                    scrollToPage(currentPage + 1);
+                } else if (touchEndX > touchStartX + 50) {
+                    // Swipe right - previous page
+                    scrollToPage(currentPage - 1);
+                }
+            }
+            
+            updatePageIndicator();
+        });
+    </script>
+</body>
+</html>
