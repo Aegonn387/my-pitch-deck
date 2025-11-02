@@ -1,0 +1,3442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pryde - Premium Ride-Hailing on Pi Network</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --primary-light: #EDE9FE;
+            --secondary: #1E293B;
+            --secondary-light: #334155;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --bg-light: #F8FAFC;
+            --bg-white: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-gray: #64748B;
+            --text-light: #94A3B8;
+            --border: #E2E8F0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: var(--bg-white);
+            min-height: 100vh;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 1.6rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .header-icon {
+            font-size: 1.3rem;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--error);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            background-color: var(--bg-white);
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 16px 0;
+            font-weight: 500;
+            color: var(--text-gray);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: var(--bg-white);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 16px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #0a0f1c;
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-small {
+            padding: 10px 16px;
+            font-size: 0.9rem;
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            color: var(--text-gray);
+            border: none;
+        }
+
+        .btn-ghost:hover {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Screen Styles */
+        .screen {
+            display: none;
+            padding-bottom: 80px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Authentication Screen */
+        .auth-container {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--bg-white) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .app-icon {
+            font-size: 4.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .app-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .app-subtitle {
+            color: var(--text-gray);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .feature-list {
+            text-align: left;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: var(--radius);
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .feature-item i {
+            color: var(--success);
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        /* Mode Selection */
+        .mode-selection {
+            display: flex;
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .mode-card {
+            flex: 1;
+            background-color: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mode-card.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .mode-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .mode-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-header {
+            padding: 20px 16px 0;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .user-rating {
+            color: var(--warning);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-balance {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            font-size: 1rem;
+            background-color: var(--bg-light);
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            background-color: var(--bg-white);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .quick-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 10px;
+            border-radius: var(--radius);
+            background-color: var(--bg-light);
+            width: 23%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .action-icon {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+
+        .action-text {
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 20px 16px 10px;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-link {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Trip Cards */
+        .trip-cards {
+            display: flex;
+            overflow-x: auto;
+            gap: 16px;
+            padding: 0 16px 16px;
+            scrollbar-width: none;
+        }
+
+        .trip-cards::-webkit-scrollbar {
+            display: none;
+        }
+
+        .trip-card {
+            min-width: 220px;
+            background-color: var(--bg-white);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .trip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .trip-card.promoted {
+            border-left: 4px solid var(--primary);
+        }
+
+        .trip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .driver-name {
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .driver-rating {
+            color: var(--warning);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trip-details {
+            margin-bottom: 15px;
+        }
+
+        .trip-location {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .trip-location i {
+            margin-right: 10px;
+            width: 16px;
+            color: var(--primary);
+        }
+
+        .trip-price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .trip-eta {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .promoted-badge {
+            background-color: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        /* Map Placeholder */
+        .map-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            border-radius: var(--radius);
+            margin: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .map-placeholder i {
+            font-size: 2rem;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--bg-white);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid var(--border);
+            z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-light);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 5px;
+            border-radius: 8px;
+            width: 20%;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+        }
+
+        /* Trip Details Screen */
+        .trip-detail-card {
+            margin: 16px;
+        }
+
+        .driver-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .driver-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 20px;
+            font-size: 1.4rem;
+            box-shadow: var(--shadow);
+        }
+
+        .driver-details {
+            flex: 1;
+        }
+
+        .driver-name-large {
+            font-size: 1.4rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .vehicle-info {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        .trip-route {
+            margin: 25px 0;
+        }
+
+        .route-point {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .route-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .route-destination .route-icon {
+            background-color: var(--secondary);
+        }
+
+        .route-details {
+            flex: 1;
+        }
+
+        .route-label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .route-address {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        .fare-breakdown {
+            margin: 25px 0;
+        }
+
+        .fare-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .fare-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--border);
+        }
+
+        .payment-method {
+            margin: 25px 0;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .payment-option.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .payment-icon {
+            font-size: 1.6rem;
+            margin-right: 15px;
+            color: var(--primary);
+        }
+
+        .payment-details {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .payment-balance {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .status-offline {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 54px;
+            height: 28px;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 10px;
+            width: 75%;
+            transition: width 0.5s ease;
+        }
+
+        /* Hidden checkbox */
+        .toggle-input {
+            display: none;
+        }
+
+        /* Chat Styles */
+        .chat-container {
+            padding: 16px;
+            height: calc(100vh - 140px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chat-header .driver-avatar {
+            width: 45px;
+            height: 45px;
+            margin-right: 12px;
+            font-size: 1rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            max-width: 80%;
+        }
+
+        .message.received {
+            align-self: flex-start;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .received .message-bubble {
+            background-color: var(--bg-light);
+            border-bottom-left-radius: 4px;
+        }
+
+        .sent .message-bubble {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .chat-input-container {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-light);
+            border-radius: 25px;
+            padding: 10px 16px;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 8px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-actions i {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chat-actions i:hover {
+            color: var(--primary);
+        }
+
+        /* NFT Styles */
+        .nft-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 0 16px 16px;
+        }
+
+        .nft-card {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nft-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nft-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .nft-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .nft-description {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        /* Schedule Styles */
+        .schedule-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .schedule-option {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .schedule-option.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Rideshare Styles */
+        .rideshare-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .rideshare-card:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .rideshare-route {
+            flex: 1;
+        }
+
+        .rideshare-stops {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 5px;
+        }
+
+        .rideshare-seats {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .rideshare-price {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-success {
+            color: var(--success);
+        }
+
+        .text-warning {
+            color: var(--warning);
+        }
+
+        .text-error {
+            color: var(--error);
+        }
+
+        .text-light {
+            color: var(--text-light);
+        }
+
+        .mb-1 {
+            margin-bottom: 8px;
+        }
+
+        .mb-2 {
+            margin-bottom: 16px;
+        }
+
+        .mb-3 {
+            margin-bottom: 24px;
+        }
+
+        .mt-1 {
+            margin-top: 8px;
+        }
+
+        .mt-2 {
+            margin-top: 16px;
+        }
+
+        .mt-3 {
+            margin-top: 24px;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .align-center {
+            align-items: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--border);
+            margin: 20px 0;
+        }
+
+        /* Animation for screens */
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Promoted Listings */
+        .promoted-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 15px;
+            border-radius: var(--radius);
+            margin: 16px;
+            text-align: center;
+        }
+
+        .promoted-banner i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .promoted-banner h3 {
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 5px;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* New styles for added features */
+        
+        /* Profile Screen */
+        .profile-section {
+            padding: 16px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 20px;
+            font-size: 1.8rem;
+            box-shadow: var(--shadow);
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        .profile-menu {
+            margin-top: 24px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-item:hover {
+            background-color: var(--bg-light);
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-icon {
+            width: 40px;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .menu-text {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .menu-arrow {
+            color: var(--text-light);
+        }
+
+        /* Settings Screen */
+        .settings-section {
+            padding: 16px;
+        }
+
+        .settings-group {
+            margin-bottom: 32px;
+        }
+
+        .settings-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .setting-desc {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        /* Messages Screen */
+        .conversation-list {
+            padding: 0 16px;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .conversation-item:hover {
+            background-color: var(--bg-light);
+            margin: 0 -16px;
+            padding: 16px;
+        }
+
+        .conversation-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1rem;
+        }
+
+        .conversation-details {
+            flex: 1;
+        }
+
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .conversation-name {
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .conversation-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .conversation-preview {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-badge {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+        }
+
+        /* Wallet Screen */
+        .wallet-balance {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: var(--radius);
+            margin: 16px;
+        }
+
+        .balance-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .balance-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .wallet-actions {
+            display: flex;
+            gap: 12px;
+            margin: 20px 16px;
+        }
+
+        .wallet-action {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background-color: var(--bg-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .wallet-action:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .wallet-action i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .transaction-list {
+            padding: 0 16px;
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .transaction-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .transaction-icon.earned {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .transaction-icon.spent {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+
+        .transaction-icon.pending {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .transaction-details {
+            flex: 1;
+        }
+
+        .transaction-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .transaction-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+        }
+
+        .transaction-amount.positive {
+            color: var(--success);
+        }
+
+        .transaction-amount.negative {
+            color: var(--error);
+        }
+
+        /* Promoted Content */
+        .promoted-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 0 16px 16px;
+        }
+
+        .promoted-feature {
+            background: linear-gradient(135deg, var(--primary-light) 0%, #f0ebff 100%);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .promoted-feature:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .promoted-feature i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .promoted-feature-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .promoted-feature-desc {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        /* Driver Verification */
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        /* Enhanced Trip Cards */
+        .trip-features {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .trip-feature {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            color: var(--text-gray);
+        }
+
+        .trip-feature i {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Authentication Screen -->
+        <div class="screen active fade-in" id="auth-screen">
+            <div class="auth-container">
+                <div class="app-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h1 class="app-title">Pryde</h1>
+                <p class="app-subtitle">Premium Ride-Hailing on Pi Network</p>
+                
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <div>Secure Blockchain Authentication</div>
+                            <div class="text-light">No additional KYC required</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-bolt"></i>
+                        <div>
+                            <div>Instant Pi Payments</div>
+                            <div class="text-light">Pay and earn with Pi cryptocurrency</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-line"></i>
+                        <div>
+                            <div>Smart Contract Escrow</div>
+                            <div class="text-light">Secure, transparent transactions</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary btn-block" id="sign-in-btn">
+                    <i class="fas fa-wallet"></i>
+                    Sign in with Pi Wallet
+                </button>
+                
+                <p class="text-light mt-2">By continuing, you agree to our Terms of Service</p>
+            </div>
+        </div>
+
+        <!-- Mode Selection Screen -->
+        <div class="screen fade-in" id="mode-screen">
+            <div class="auth-container">
+                <h2 class="app-title">How do you want to use Pryde?</h2>
+                <p class="app-subtitle">Choose your role in the Pryde ecosystem</p>
+                
+                <div class="mode-selection">
+                    <div class="mode-card" id="rider-mode">
+                        <div class="mode-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="mode-title">RIDER</div>
+                        <p>Book trips, pay with Pi, and enjoy premium rides</p>
+                        <div class="text-primary mt-2">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="mode-card" id="driver-mode">
+                        <div class="mode-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="mode-title">DRIVER</div>
+                        <p>Earn Pi by providing premium rides to the community</p>
+                        <div class="text-primary mt-2">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-light">You can switch modes anytime in settings</p>
+            </div>
+        </div>
+
+        <!-- Rider Dashboard -->
+        <div class="screen fade-in" id="rider-dashboard">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-crown logo-icon"></i>
+                    <span>Pryde</span>
+                </div>
+                <div class="header-actions">
+                    <div class="header-icon" id="messages-btn">
+                        <i class="fas fa-comment"></i>
+                        <div class="notification-badge">5</div>
+                    </div>
+                    <div class="header-icon" id="profile-btn">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="user-details">
+                        <div class="user-avatar" id="user-avatar">JD</div>
+                        <div>
+                            <div class="user-name" id="user-name">John Doe</div>
+                            <div class="user-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.8</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-balance" id="user-balance">245.80 Pi</div>
+                </div>
+
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Where to?">
+                </div>
+
+                <div class="quick-actions">
+                    <div class="action-btn" id="action-now">
+                        <div class="action-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="action-text">Now</div>
+                    </div>
+                    <div class="action-btn" id="action-schedule">
+                        <div class="action-icon"><i class="fas fa-clock"></i></div>
+                        <div class="action-text">Schedule</div>
+                    </div>
+                    <div class="action-btn" id="action-rideshare">
+                        <div class="action-icon"><i class="fas fa-users"></i></div>
+                        <div class="action-text">Rideshare</div>
+                    </div>
+                    <div class="action-btn" id="action-promote">
+                        <div class="action-icon"><i class="fas fa-gem"></i></div>
+                        <div class="action-text">Promote</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="promoted-banner">
+                <i class="fas fa-crown"></i>
+                <h3>Premium Rides</h3>
+                <p>Experience Pryde with our top-rated drivers</p>
+            </div>
+
+            <div class="section-title">
+                <span>RECOMMENDED DRIVERS</span>
+                <span class="section-link">View all</span>
+            </div>
+            <div class="trip-cards">
+                <div class="trip-card promoted">
+                    <div class="trip-header">
+                        <div class="driver-name">John</div>
+                        <div class="driver-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.9</span>
+                            <span class="promoted-badge">PRO</span>
+                        </div>
+                    </div>
+                    <div class="trip-details">
+                        <div class="trip-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Downtown • 2.4km</span>
+                        </div>
+                    </div>
+                    <div class="trip-features">
+                        <div class="trip-feature">
+                            <i class="fas fa-wifi"></i>
+                            <span>WiFi</span>
+                        </div>
+                        <div class="trip-feature">
+                            <i class="fas fa-snowflake"></i>
+                            <span>AC</span>
+                        </div>
+                        <div class="trip-feature">
+                            <i class="fas fa-bolt"></i>
+                            <span>EV</span>
+                        </div>
+                    </div>
+                    <div class="trip-price">5 Pi</div>
+                    <div class="trip-eta">
+                        <i class="fas fa-clock"></i>
+                        <span>5 min</span>
+                    </div>
+                </div>
+                
+                <div class="trip-card">
+                    <div class="trip-header">
+                        <div class="driver-name">Sarah</div>
+                        <div class="driver-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.7</span>
+                        </div>
+                    </div>
+                    <div class="trip-details">
+                        <div class="trip-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Airport • 5.2km</span>
+                        </div>
+                    </div>
+                    <div class="trip-features">
+                        <div class="trip-feature">
+                            <i class="fas fa-wifi"></i>
+                            <span>WiFi</span>
+                        </div>
+                        <div class="trip-feature">
+                            <i class="fas fa-snowflake"></i>
+                            <span>AC</span>
+                        </div>
+                    </div>
+                    <div class="trip-price">8 Pi</div>
+                    <div class="trip-eta">
+                        <i class="fas fa-clock"></i>
+                        <span>12 min</span>
+                    </div>
+                </div>
+                
+                <div class="trip-card promoted">
+                    <div class="trip-header">
+                        <div class="driver-name">Mike</div>
+                        <div class="driver-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.8</span>
+                            <span class="promoted-badge">PRO</span>
+                        </div>
+                    </div>
+                    <div class="trip-details">
+                        <div class="trip-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>City Center • 1.8km</span>
+                        </div>
+                    </div>
+                    <div class="trip-features">
+                        <div class="trip-feature">
+                            <i class="fas fa-wifi"></i>
+                            <span>WiFi</span>
+                        </div>
+                        <div class="trip-feature">
+                            <i class="fas fa-snowflake"></i>
+                            <span>AC</span>
+                        </div>
+                        <div class="trip-feature">
+                            <i class="fas fa-bolt"></i>
+                            <span>EV</span>
+                        </div>
+                    </div>
+                    <div class="trip-price">6 Pi</div>
+                    <div class="trip-eta">
+                        <i class="fas fa-clock"></i>
+                        <span>8 min</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <span>ACTIVE DRIVERS NEAR YOU</span>
+                <span class="section-link">Refresh</span>
+            </div>
+            <div class="map-placeholder">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Live Map View</span>
+                <div class="text-light">8 drivers available in your area</div>
+            </div>
+
+            <div class="section-title mt-3">
+                <span>RIDESHARE OPTIONS</span>
+                <span class="section-link">See all</span>
+            </div>
+            <div class="card">
+                <div class="rideshare-card">
+                    <div class="rideshare-route">
+                        <div class="rideshare-stops">Downtown → Airport → Mall</div>
+                        <div class="rideshare-seats">
+                            <i class="fas fa-user-friends"></i>
+                            <span>2 seats available</span>
+                        </div>
+                    </div>
+                    <div class="rideshare-price">3 Pi/seat</div>
+                </div>
+                <div class="rideshare-card">
+                    <div class="rideshare-route">
+                        <div class="rideshare-stops">City Center → University → Park</div>
+                        <div class="rideshare-seats">
+                            <i class="fas fa-user-friends"></i>
+                            <span>1 seat available</span>
+                        </div>
+                    </div>
+                    <div class="rideshare-price">4 Pi/seat</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver Dashboard -->
+        <div class="screen fade-in" id="driver-dashboard">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-crown logo-icon"></i>
+                    <span>Pryde Driver</span>
+                </div>
+                <div class="header-actions">
+                    <div class="header-icon" id="driver-messages-btn">
+                        <i class="fas fa-comment"></i>
+                        <div class="notification-badge">5</div>
+                    </div>
+                    <div class="header-icon" id="driver-profile-btn">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="user-details">
+                        <div class="user-avatar" id="driver-avatar">JD</div>
+                        <div>
+                            <div class="user-name" id="driver-name">John Driver</div>
+                            <div class="user-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.9</span>
+                            </div>
+                            <div class="verification-badge">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Verified Driver</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-balance" id="driver-balance">245 Pi</div>
+                </div>
+
+                <div class="card mb-2">
+                    <div class="d-flex justify-between align-center">
+                        <span class="status-indicator status-online">
+                            <i class="fas fa-circle"></i>
+                            ONLINE
+                        </span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="toggle-input" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Today's Summary</div>
+                        <div class="text-primary">View Report</div>
+                    </div>
+                    <div class="d-flex justify-between">
+                        <div class="text-center">
+                            <div class="text-primary" style="font-size: 1.3rem; font-weight: 700;">12</div>
+                            <div class="text-light">Trips</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-primary" style="font-size: 1.3rem; font-weight: 700;">89 Pi</div>
+                            <div class="text-light">Earnings</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-primary" style="font-size: 1.3rem; font-weight: 700;">4.9⭐</div>
+                            <div class="text-light">Rating</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-primary" style="font-size: 1.3rem; font-weight: 700;">4h 22m</div>
+                            <div class="text-light">Online</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <div class="action-btn" id="driver-action-now">
+                        <div class="action-icon"><i class="fas fa-car"></i></div>
+                        <div class="action-text">List Now</div>
+                    </div>
+                    <div class="action-btn" id="driver-action-schedule">
+                        <div class="action-icon"><i class="fas fa-clock"></i></div>
+                        <div class="action-text">Schedule</div>
+                    </div>
+                    <div class="action-btn" id="driver-action-rideshare">
+                        <div class="action-icon"><i class="fas fa-users"></i></div>
+                        <div class="action-text">Rideshare</div>
+                    </div>
+                    <div class="action-btn" id="driver-action-promote">
+                        <div class="action-icon"><i class="fas fa-gem"></i></div>
+                        <div class="action-text">Promote</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">ACTIVE RIDE REQUESTS</div>
+            <div class="card">
+                <div class="trip-header">
+                    <div class="driver-name">Maria</div>
+                    <div class="driver-rating">
+                        <i class="fas fa-star"></i>
+                        <span>4.8</span>
+                    </div>
+                </div>
+                <div class="trip-details">
+                    <div class="trip-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>1.2km away • Downtown → Airport</span>
+                    </div>
+                </div>
+                <div class="trip-price">12 Pi</div>
+                <div class="trip-eta">
+                    <i class="fas fa-clock"></i>
+                    <span>25 min estimated</span>
+                </div>
+                <div class="d-flex justify-between mt-2">
+                    <button class="btn btn-outline btn-small">Decline</button>
+                    <button class="btn btn-primary btn-small">Accept Ride</button>
+                </div>
+            </div>
+
+            <div class="section-title">PERFORMANCE METRICS</div>
+            <div class="card">
+                <div class="d-flex justify-between">
+                    <div class="text-center">
+                        <div class="text-success" style="font-size: 1.2rem; font-weight: 700;">98%</div>
+                        <div class="text-light">Acceptance</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-success" style="font-size: 1.2rem; font-weight: 700;">100%</div>
+                        <div class="text-light">Completion</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-warning" style="font-size: 1.2rem; font-weight: 700;">0%</div>
+                        <div class="text-light">Cancellation</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-warning" style="font-size: 1.2rem; font-weight: 700;">4.9</div>
+                        <div class="text-light">Avg Rating</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">EARNINGS BREAKDOWN</div>
+            <div class="card">
+                <div class="fare-row">
+                    <span>Immediate Trips:</span>
+                    <span>142 Pi (75%)</span>
+                </div>
+                <div class="fare-row">
+                    <span>Rideshare:</span>
+                    <span>32 Pi (17%)</span>
+                </div>
+                <div class="fare-row">
+                    <span>Scheduled:</span>
+                    <span>15 Pi (8%)</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="text-center text-light">Weekly goal: 200 Pi</div>
+            </div>
+        </div>
+
+        <!-- Profile Screen -->
+        <div class="screen fade-in" id="profile-screen">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-arrow-left logo-icon" id="back-from-profile"></i>
+                    <span>My Profile</span>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <div class="profile-header">
+                    <div class="profile-avatar-large" id="profile-avatar-large">JD</div>
+                    <div>
+                        <div class="driver-name-large" id="profile-name">John Doe</div>
+                        <div class="user-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 • 124 trips</span>
+                        </div>
+                        <div class="verification-badge">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Pi Network Verified</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">124</div>
+                        <div class="stat-label">Trips</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">245.8</div>
+                        <div class="stat-label">Pi Balance</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">4.8</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Account Information</div>
+                    <div class="fare-row">
+                        <span>Member Since:</span>
+                        <span>March 2023</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Pioneer Status:</span>
+                        <span>Verified</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>KYC Level:</span>
+                        <span>Advanced</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Wallet Address:</span>
+                        <span>GA2H5...8F9E</span>
+                    </div>
+                </div>
+
+                <div class="profile-menu">
+                    <div class="menu-item" id="profile-settings">
+                        <div class="menu-icon"><i class="fas fa-cog"></i></div>
+                        <div class="menu-text">Settings</div>
+                        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                    <div class="menu-item" id="profile-wallet">
+                        <div class="menu-icon"><i class="fas fa-wallet"></i></div>
+                        <div class="menu-text">Wallet & Earnings</div>
+                        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                    <div class="menu-item" id="profile-nft">
+                        <div class="menu-icon"><i class="fas fa-trophy"></i></div>
+                        <div class="menu-text">NFT Rewards</div>
+                        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                    <div class="menu-item" id="profile-referrals">
+                        <div class="menu-icon"><i class="fas fa-user-plus"></i></div>
+                        <div class="menu-text">Refer Friends</div>
+                        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                    <div class="menu-item" id="profile-support">
+                        <div class="menu-icon"><i class="fas fa-headset"></i></div>
+                        <div class="menu-text">Help & Support</div>
+                        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                    <div class="menu-item" id="profile-about">
+                        <div class="menu-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="menu-text">About Pryde</div>
+                        <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div class="screen fade-in" id="settings-screen">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-arrow-left logo-icon" id="back-from-settings"></i>
+                    <span>Settings</span>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-group">
+                    <div class="settings-title">Account Settings</div>
+                    <div class="card">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Switch Mode</div>
+                                <div class="setting-desc">Change between rider and driver</div>
+                            </div>
+                            <div class="text-primary">Rider</div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Privacy Mode</div>
+                                <div class="setting-desc">Hide personal details during trips</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-input" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Two-Factor Authentication</div>
+                                <div class="setting-desc">Enhanced security for your account</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-input">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-title">Notification Preferences</div>
+                    <div class="card">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Ride Notifications</div>
+                                <div class="setting-desc">Alerts for new rides and updates</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-input" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Promotional Offers</div>
+                                <div class="setting-desc">Special deals and discounts</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-input" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Payment Notifications</div>
+                                <div class="setting-desc">Alerts for payments and earnings</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-input" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-title">Payment & Wallet</div>
+                    <div class="card">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Default Payment Method</div>
+                                <div class="setting-desc">Pi Wallet</div>
+                            </div>
+                            <div class="text-primary">Change</div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Auto-Withdraw Earnings</div>
+                                <div class="setting-desc">Transfer to main wallet automatically</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-input">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Transaction History</div>
+                                <div class="setting-desc">View all your transactions</div>
+                            </div>
+                            <div class="text-primary">View</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-title">App Preferences</div>
+                    <div class="card">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Language</div>
+                                <div class="setting-desc">English</div>
+                            </div>
+                            <div class="text-primary">Change</div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Dark Mode</div>
+                                <div class="setting-desc">Use dark theme</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-input">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Clear Cache</div>
+                                <div class="setting-desc">Free up storage space</div>
+                            </div>
+                            <div class="text-primary">Clear</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-title">About</div>
+                    <div class="card">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">App Version</div>
+                                <div class="setting-desc">Pryde v2.1.0</div>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Terms of Service</div>
+                            </div>
+                            <div class="text-primary">View</div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-name">Privacy Policy</div>
+                            </div>
+                            <div class="text-primary">View</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-outline btn-block mt-3">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sign Out
+                </button>
+            </div>
+        </div>
+
+        <!-- Messages Screen -->
+        <div class="screen fade-in" id="messages-screen">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-arrow-left logo-icon" id="back-from-messages"></i>
+                    <span>Messages</span>
+                </div>
+            </div>
+
+            <div class="conversation-list">
+                <div class="conversation-item" id="conversation-1">
+                    <div class="conversation-avatar">JD</div>
+                    <div class="conversation-details">
+                        <div class="conversation-header">
+                            <div class="conversation-name">John Driver</div>
+                            <div class="conversation-time">10:24 AM</div>
+                        </div>
+                        <div class="conversation-preview">I'm 5 minutes away. I'm driving a blue Toyota Prius.</div>
+                    </div>
+                    <div class="conversation-badge">2</div>
+                </div>
+
+                <div class="conversation-item" id="conversation-2">
+                    <div class="conversation-avatar">SM</div>
+                    <div class="conversation-details">
+                        <div class="conversation-header">
+                            <div class="conversation-name">Sarah M.</div>
+                            <div class="conversation-time">Yesterday</div>
+                        </div>
+                        <div class="conversation-preview">Thanks for the great ride! I left my charger in your car...</div>
+                    </div>
+                </div>
+
+                <div class="conversation-item" id="conversation-3">
+                    <div class="conversation-avatar">PT</div>
+                    <div class="conversation-details">
+                        <div class="conversation-header">
+                            <div class="conversation-name">Pryde Team</div>
+                            <div class="conversation-time">Oct 12</div>
+                        </div>
+                        <div class="conversation-preview">Your account has been verified. Welcome to Pryde!</div>
+                    </div>
+                </div>
+
+                <div class="conversation-item" id="conversation-4">
+                    <div class="conversation-avatar">MJ</div>
+                    <div class="conversation-details">
+                        <div class="conversation-header">
+                            <div class="conversation-name">Mike Johnson</div>
+                            <div class="conversation-time">Oct 10</div>
+                        </div>
+                        <div class="conversation-preview">Can you pick me up from the airport tomorrow at 3 PM?</div>
+                    </div>
+                </div>
+
+                <div class="conversation-item" id="conversation-5">
+                    <div class="conversation-avatar">RS</div>
+                    <div class="conversation-details">
+                        <div class="conversation-header">
+                            <div class="conversation-name">Rideshare Group</div>
+                            <div class="conversation-time">Oct 8</div>
+                        </div>
+                        <div class="conversation-preview">Maria: I'll be there in 10 minutes. Please be ready.</div>
+                    </div>
+                    <div class="conversation-badge">5</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Screen -->
+        <div class="screen fade-in" id="chat-screen">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-arrow-left logo-icon" id="back-from-chat"></i>
+                    <span>John Driver</span>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages">
+                    <div class="message received">
+                        <div class="message-bubble">
+                            Hi, I'm on my way. I'll be there in about 5 minutes.
+                            <div class="message-time">10:20 AM</div>
+                        </div>
+                    </div>
+                    <div class="message sent">
+                        <div class="message-bubble">
+                            Great! I'm waiting at the main entrance.
+                            <div class="message-time">10:21 AM</div>
+                        </div>
+                    </div>
+                    <div class="message received">
+                        <div class="message-bubble">
+                            I'm driving a blue Toyota Prius. License plate ABC 123.
+                            <div class="message-time">10:22 AM</div>
+                        </div>
+                    </div>
+                    <div class="message sent">
+                        <div class="message-bubble">
+                            Perfect, I'll look out for you. Thanks!
+                            <div class="message-time">10:23 AM</div>
+                        </div>
+                    </div>
+                    <div class="message received">
+                        <div class="message-bubble">
+                            I can see you now. I'll pull up right in front.
+                            <div class="message-time">10:24 AM</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <i class="fas fa-plus-circle"></i>
+                    <input type="text" class="chat-input" placeholder="Type a message...">
+                    <div class="chat-actions">
+                        <i class="fas fa-image"></i>
+                        <i class="fas fa-microphone"></i>
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallet Screen -->
+        <div class="screen fade-in" id="wallet-screen">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-arrow-left logo-icon" id="back-from-wallet"></i>
+                    <span>Wallet & Earnings</span>
+                </div>
+            </div>
+
+            <div class="wallet-balance">
+                <div class="balance-amount">245.80 Pi</div>
+                <div class="balance-label">Available Balance</div>
+                <div class="text-light mt-1">$98.32 USD</div>
+            </div>
+
+            <div class="wallet-actions">
+                <div class="wallet-action" id="wallet-add">
+                    <i class="fas fa-plus"></i>
+                    <div>Add Pi</div>
+                </div>
+                <div class="wallet-action" id="wallet-send">
+                    <i class="fas fa-paper-plane"></i>
+                    <div>Send Pi</div>
+                </div>
+                <div class="wallet-action" id="wallet-withdraw">
+                    <i class="fas fa-download"></i>
+                    <div>Withdraw</div>
+                </div>
+                <div class="wallet-action" id="wallet-history">
+                    <i class="fas fa-history"></i>
+                    <div>History</div>
+                </div>
+            </div>
+
+            <div class="section-title">EARNINGS SUMMARY</div>
+            <div class="card">
+                <div class="d-flex justify-between">
+                    <div class="text-center">
+                        <div class="text-success" style="font-size: 1.2rem; font-weight: 700;">142.5 Pi</div>
+                        <div class="text-light">This Week</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-primary" style="font-size: 1.2rem; font-weight: 700;">589.3 Pi</div>
+                        <div class="text-light">This Month</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-warning" style="font-size: 1.2rem; font-weight: 700;">245.8 Pi</div>
+                        <div class="text-light">Available</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">RECENT TRANSACTIONS</div>
+            <div class="transaction-list">
+                <div class="transaction-item">
+                    <div class="transaction-icon earned">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Ride Earnings</div>
+                        <div class="transaction-date">Today, 10:30 AM</div>
+                    </div>
+                    <div class="transaction-amount positive">+12.5 Pi</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-icon spent">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Ride Payment</div>
+                        <div class="transaction-date">Today, 9:15 AM</div>
+                    </div>
+                    <div class="transaction-amount negative">-8.2 Pi</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-icon earned">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Referral Bonus</div>
+                        <div class="transaction-date">Yesterday, 4:20 PM</div>
+                    </div>
+                    <div class="transaction-amount positive">+25.0 Pi</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Scheduled Ride</div>
+                        <div class="transaction-date">Oct 12, 2:00 PM</div>
+                    </div>
+                    <div class="transaction-amount negative">-15.0 Pi</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-icon earned">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Rideshare Earnings</div>
+                        <div class="transaction-date">Oct 11, 6:45 PM</div>
+                    </div>
+                    <div class="transaction-amount positive">+9.5 Pi</div>
+                </div>
+            </div>
+
+            <div class="section-title">ESCROW DETAILS</div>
+            <div class="card">
+                <div class="card-title">Active Escrow Transactions</div>
+                <div class="fare-row">
+                    <span>Current Ride:</span>
+                    <span>12.5 Pi</span>
+                </div>
+                <div class="fare-row">
+                    <span>Scheduled Rides:</span>
+                    <span>15.0 Pi</span>
+                </div>
+                <div class="fare-row">
+                    <span>Dispute Resolution:</span>
+                    <span>0.0 Pi</span>
+                </div>
+                <div class="fare-total">
+                    <span>TOTAL IN ESCROW:</span>
+                    <span>27.5 Pi</span>
+                </div>
+                <div class="text-light mt-1">
+                    <i class="fas fa-info-circle"></i> Funds in escrow are released after trip completion
+                </div>
+            </div>
+        </div>
+
+        <!-- Promoted Content Screen -->
+        <div class="screen fade-in" id="promoted-screen">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-arrow-left logo-icon" id="back-from-promoted"></i>
+                    <span>Promoted Listings</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Boost Your Visibility</div>
+                        <div class="card-subtitle">Get more rides with promoted listings</div>
+                    </div>
+                    <div class="user-balance">45 Pi</div>
+                </div>
+
+                <div class="promoted-features">
+                    <div class="promoted-feature" id="promote-now">
+                        <i class="fas fa-bolt"></i>
+                        <div class="promoted-feature-title">Instant Boost</div>
+                        <div class="promoted-feature-desc">Get priority for 2 hours</div>
+                        <div class="trip-price mt-2">5 Pi</div>
+                    </div>
+                    <div class="promoted-feature" id="promote-daily">
+                        <i class="fas fa-calendar-day"></i>
+                        <div class="promoted-feature-title">Daily Promotion</div>
+                        <div class="promoted-feature-desc">Featured for 24 hours</div>
+                        <div class="trip-price mt-2">15 Pi</div>
+                    </div>
+                    <div class="promoted-feature" id="promote-weekly">
+                        <i class="fas fa-calendar-week"></i>
+                        <div class="promoted-feature-title">Weekly Boost</div>
+                        <div class="promoted-feature-desc">Top placement for 7 days</div>
+                        <div class="trip-price mt-2">40 Pi</div>
+                    </div>
+                    <div class="promoted-feature" id="promote-premium">
+                        <i class="fas fa-crown"></i>
+                        <div class="promoted-feature-title">Premium</div>
+                        <div class="promoted-feature-desc">Maximum visibility package</div>
+                        <div class="trip-price mt-2">75 Pi</div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-title">Promotion Benefits</div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-line text-primary"></i>
+                        <div>
+                            <div>3x More Visibility</div>
+                            <div class="text-light">Appear higher in search results</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-badge-check text-primary"></i>
+                        <div>
+                            <div>Verified Badge</div>
+                            <div class="text-light">Stand out with special markers</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-bullseye text-primary"></i>
+                        <div>
+                            <div>Targeted Matching</div>
+                            <div class="text-light">Get matched with ideal customers</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-block mt-3">
+                    <i class="fas fa-rocket"></i>
+                    Activate Promotion
+                </button>
+            </div>
+        </div>
+
+        <!-- Trip Details Screen -->
+        <div class="screen fade-in" id="trip-details">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-arrow-left logo-icon" id="back-from-trip"></i>
+                    <span>Trip Details</span>
+                </div>
+            </div>
+
+            <div class="trip-detail-card">
+                <div class="driver-info">
+                    <div class="driver-avatar">JD</div>
+                    <div class="driver-details">
+                        <div class="driver-name-large">John D.</div>
+                        <div class="driver-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 • 245 trips</span>
+                        </div>
+                        <div class="vehicle-info">Toyota Prius • ABC 123</div>
+                        <div class="verification-badge">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Verified Driver</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trip-route">
+                    <div class="route-point">
+                        <div class="route-icon"><i class="fas fa-circle"></i></div>
+                        <div class="route-details">
+                            <div class="route-label">Pickup</div>
+                            <div class="route-address">123 Main St, Downtown</div>
+                        </div>
+                    </div>
+                    <div class="route-point route-destination">
+                        <div class="route-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="route-details">
+                            <div class="route-label">Dropoff</div>
+                            <div class="route-address">Airport Terminal 1</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trip-details card">
+                    <div class="d-flex justify-between mb-1">
+                        <span>Distance:</span>
+                        <span>18km</span>
+                    </div>
+                    <div class="d-flex justify-between">
+                        <span>Estimated Time:</span>
+                        <span>25 min</span>
+                    </div>
+                </div>
+
+                <div class="fare-breakdown card">
+                    <div class="card-title mb-2">Fare Breakdown</div>
+                    <div class="fare-row">
+                        <span>Base Fare:</span>
+                        <span>5.0 Pi</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Distance:</span>
+                        <span>2.5 Pi</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Time:</span>
+                        <span>1.0 Pi</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Platform Fee (10%):</span>
+                        <span>0.85 Pi</span>
+                    </div>
+                    <div class="fare-total">
+                        <span>TOTAL:</span>
+                        <span>9.35 Pi</span>
+                    </div>
+                    <div class="text-light mt-1">
+                        <i class="fas fa-user-check"></i> Driver receives: 8.42 Pi (90%)<br>
+                        <i class="fas fa-building"></i> Platform fee: 0.93 Pi (10%)
+                    </div>
+                </div>
+
+                <div class="payment-method card">
+                    <div class="card-title mb-2">Payment Method</div>
+                    <div class="payment-option active">
+                        <div class="payment-icon"><i class="fas fa-wallet"></i></div>
+                        <div class="payment-details">
+                            <div class="payment-name">Pi Wallet</div>
+                            <div class="payment-balance">Balance: 245.80 Pi</div>
+                        </div>
+                        <i class="fas fa-check-circle text-primary"></i>
+                    </div>
+                    <div class="payment-option">
+                        <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
+                        <div class="payment-details">
+                            <div class="payment-name">Pi Card</div>
+                        </div>
+                    </div>
+                    <div class="payment-option">
+                        <div class="payment-icon"><i class="fas fa-university"></i></div>
+                        <div class="payment-details">
+                            <div class="payment-name">Bank Transfer</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card text-light">
+                    <i class="fas fa-lock"></i> Payment will be held in escrow until trip completion
+                </div>
+
+                <button class="btn btn-primary btn-block mt-3" id="confirm-payment">
+                    <i class="fas fa-lock"></i>
+                    Confirm & Pay 9.35 Pi
+                </button>
+            </div>
+        </div>
+
+        <!-- Payment Processing Screen -->
+        <div class="screen fade-in" id="payment-processing">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-crown logo-icon"></i>
+                    <span>Payment Processing</span>
+                </div>
+            </div>
+
+            <div class="auth-container">
+                <div class="app-icon">
+                    <div class="spinner"></div>
+                </div>
+                <h2 class="app-title">Processing Payment</h2>
+                <p class="app-subtitle">Please wait while we secure your transaction</p>
+                
+                <div class="card mt-2">
+                    <div class="card-title text-center">Transaction Details</div>
+                    <div class="fare-row">
+                        <span>From:</span>
+                        <span>Your Pi Wallet</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>To:</span>
+                        <span>Pryde Escrow Contract</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Amount:</span>
+                        <span>9.35 Pi</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Network Fee:</span>
+                        <span>0.001 Pi</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Status:</span>
+                        <span class="text-warning">Confirming...</span>
+                    </div>
+                </div>
+
+                <div class="card mt-2">
+                    <div class="card-title text-center">Smart Contract Actions</div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <div>
+                            <div>Validate payment amount</div>
+                            <div class="text-light">Verified: 9.35 Pi</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <div>
+                            <div>Lock funds in escrow</div>
+                            <div class="text-light">Transaction: 0x7d9...c42</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-spinner fa-spin text-primary"></i>
+                        <div>
+                            <div>Create trip record on blockchain</div>
+                            <div class="text-light">In progress...</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="far fa-circle text-light"></i>
+                        <div>
+                            <div>Notify driver</div>
+                            <div class="text-light">Pending</div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-light mt-2">This usually takes 10-30 seconds...</p>
+            </div>
+        </div>
+
+        <!-- Schedule Trip Screen -->
+        <div class="screen fade-in" id="schedule-screen">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-arrow-left logo-icon" id="back-from-schedule"></i>
+                    <span>Schedule a Trip</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">When would you like to ride?</div>
+                <div class="schedule-options">
+                    <div class="schedule-option active">Now</div>
+                    <div class="schedule-option">Today</div>
+                    <div class="schedule-option">Tomorrow</div>
+                    <div class="schedule-option">Later</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Pickup Date & Time</label>
+                    <input type="datetime-local" class="form-control" value="2023-10-15T14:30">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Pickup Location</label>
+                    <input type="text" class="form-control" placeholder="Enter pickup location" value="123 Main St">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Destination</label>
+                    <input type="text" class="form-control" placeholder="Enter destination" value="Airport Terminal 1">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Vehicle Preference</label>
+                    <select class="form-control">
+                        <option>Any</option>
+                        <option>Economy</option>
+                        <option>Comfort</option>
+                        <option>Premium</option>
+                    </select>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Booking Deposit</div>
+                    <div class="text-light mb-2">Secure your scheduled trip with a small deposit</div>
+                    <div class="d-flex justify-between align-center">
+                        <span>Deposit Amount:</span>
+                        <span class="text-primary">2.0 Pi</span>
+                    </div>
+                    <div class="text-light mt-1">Fully refundable if canceled at least 1 hour before pickup</div>
+                </div>
+
+                <button class="btn btn-primary btn-block mt-3">
+                    <i class="fas fa-calendar-check"></i>
+                    Schedule Trip
+                </button>
+            </div>
+        </div>
+
+        <!-- Rideshare Screen -->
+        <div class="screen fade-in" id="rideshare-screen">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-arrow-left logo-icon" id="back-from-rideshare"></i>
+                    <span>Rideshare Options</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Available Rideshares</div>
+                <div class="card-subtitle">Share rides with other Pi Network users</div>
+
+                <div class="rideshare-card">
+                    <div class="rideshare-route">
+                        <div class="rideshare-stops">Downtown → Airport → Mall</div>
+                        <div class="rideshare-seats">
+                            <i class="fas fa-user-friends"></i>
+                            <span>2 seats available</span>
+                        </div>
+                        <div class="trip-eta">
+                            <i class="fas fa-clock"></i>
+                            <span>Departing in 15 min</span>
+                        </div>
+                    </div>
+                    <div class="rideshare-price">3 Pi/seat</div>
+                </div>
+
+                <div class="rideshare-card">
+                    <div class="rideshare-route">
+                        <div class="rideshare-stops">City Center → University → Park</div>
+                        <div class="rideshare-seats">
+                            <i class="fas fa-user-friends"></i>
+                            <span>1 seat available</span>
+                        </div>
+                        <div class="trip-eta">
+                            <i class="fas fa-clock"></i>
+                            <span>Departing in 30 min</span>
+                        </div>
+                    </div>
+                    <div class="rideshare-price">4 Pi/seat</div>
+                </div>
+
+                <div class="rideshare-card">
+                    <div class="rideshare-route">
+                        <div class="rideshare-stops">North District → Business Park → South Mall</div>
+                        <div class="rideshare-seats">
+                            <i class="fas fa-user-friends"></i>
+                            <span>3 seats available</span>
+                        </div>
+                        <div class="trip-eta">
+                            <i class="fas fa-clock"></i>
+                            <span>Departing in 45 min</span>
+                        </div>
+                    </div>
+                    <div class="rideshare-price">2.5 Pi/seat</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Create Rideshare</div>
+                <div class="card-subtitle">List your own rideshare trip</div>
+
+                <div class="form-group">
+                    <label class="form-label">Route</label>
+                    <input type="text" class="form-control" placeholder="Enter your route">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Available Seats</label>
+                    <input type="number" class="form-control" placeholder="Number of seats" min="1" max="6" value="3">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Price per Seat (Pi)</label>
+                    <input type="number" class="form-control" placeholder="Price per seat" value="3">
+                </div>
+
+                <button class="btn btn-outline btn-block">
+                    <i class="fas fa-users"></i>
+                    Create Rideshare
+                </button>
+            </div>
+        </div>
+
+        <!-- NFT Loyalty Screen -->
+        <div class="screen fade-in" id="nft-screen">
+            <div class="app-header">
+                <div class="logo">
+                    <i class="fas fa-arrow-left logo-icon" id="back-from-nft"></i>
+                    <span>NFT Rewards</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Your Pryde NFTs</div>
+                        <div class="card-subtitle">Earn exclusive rewards and benefits</div>
+                    </div>
+                    <div class="user-balance">3 NFTs</div>
+                </div>
+
+                <div class="nft-grid">
+                    <div class="nft-card">
+                        <div class="nft-icon"><i class="fas fa-award"></i></div>
+                        <div class="nft-title">Bronze Rider</div>
+                        <div class="nft-description">Completed 10+ trips</div>
+                    </div>
+                    <div class="nft-card">
+                        <div class="nft-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="nft-title">Verified Pioneer</div>
+                        <div class="nft-description">KYC verified member</div>
+                    </div>
+                    <div class="nft-card">
+                        <div class="nft-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="nft-title">Early Adopter</div>
+                        <div class="nft-description">Joined in first month</div>
+                    </div>
+                    <div class="nft-card">
+                        <div class="nft-icon"><i class="fas fa-gem"></i></div>
+                        <div class="nft-title">Gold Tier</div>
+                        <div class="nft-description">100+ trips completed</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Active Benefits</div>
+                <div class="feature-item">
+                    <i class="fas fa-percentage text-primary"></i>
+                    <div>
+                        <div>5% platform fee discount</div>
+                        <div class="text-light">Applied to all your trips</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-crown text-primary"></i>
+                    <div>
+                        <div>Priority in search results</div>
+                        <div class="text-light">Get matched faster</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-badge-check text-primary"></i>
+                    <div>
+                        <div>Exclusive vehicle badges</div>
+                        <div class="text-light">Stand out from the crowd</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Progress to Next Tier</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 65%;"></div>
+                </div>
+                <div class="d-flex justify-between mt-1">
+                    <span class="text-light">Silver Tier</span>
+                    <span class="text-primary">65%</span>
+                </div>
+                <div class="text-center text-light mt-1">35 more trips to unlock Silver benefits</div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" data-screen="rider-dashboard">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <div class="nav-text">Home</div>
+            </div>
+            <div class="nav-item" data-screen="schedule-screen">
+                <div class="nav-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="nav-text">Trips</div>
+            </div>
+            <div class="nav-item" data-screen="wallet-screen">
+                <div class="nav-icon"><i class="fas fa-wallet"></i></div>
+                <div class="nav-text">Wallet</div>
+            </div>
+            <div class="nav-item" data-screen="nft-screen">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <div class="nav-text">Rewards</div>
+            </div>
+            <div class="nav-item" data-screen="profile-screen">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <div class="nav-text">Profile</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock Pi SDK integration
+        const mockPiSDK = {
+            authenticate: function() {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({
+                            user: {
+                                username: 'pioneer_user',
+                                uid: 'user_123456',
+                                verified: true
+                            }
+                        });
+                    }, 1500);
+                });
+            },
+            getUser: function() {
+                return {
+                    username: 'pioneer_user',
+                    uid: 'user_123456',
+                    verified: true
+                };
+            }
+        };
+
+        // User data management
+        let userData = {
+            name: 'John Doe',
+            username: '',
+            balance: 245.80,
+            rating: 4.8,
+            trips: 124,
+            mode: 'rider' // 'rider' or 'driver'
+        };
+
+        // Screen Management
+        const screens = document.querySelectorAll('.screen');
+        
+        function showScreen(screenId) {
+            screens.forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+            
+            // Update bottom navigation
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+                if (nav.getAttribute('data-screen') === screenId) {
+                    nav.classList.add('active');
+                }
+            });
+        }
+
+        // Update user interface with user data
+        function updateUserInterface() {
+            // Update rider dashboard
+            document.getElementById('user-name').textContent = userData.name;
+            document.getElementById('user-avatar').textContent = userData.name.split(' ').map(n => n[0]).join('');
+            document.getElementById('user-balance').textContent = userData.balance.toFixed(2) + ' Pi';
+            
+            // Update driver dashboard
+            document.getElementById('driver-name').textContent = userData.name;
+            document.getElementById('driver-avatar').textContent = userData.name.split(' ').map(n => n[0]).join('');
+            document.getElementById('driver-balance').textContent = userData.balance.toFixed(2) + ' Pi';
+            
+            // Update profile screen
+            document.getElementById('profile-name').textContent = userData.name;
+            document.getElementById('profile-avatar-large').textContent = userData.name.split(' ').map(n => n[0]).join('');
+        }
+
+        // Authentication Flow
+        document.getElementById('sign-in-btn').addEventListener('click', function() {
+            const btn = this;
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<div class="spinner"></div> Authenticating...';
+            btn.disabled = true;
+            
+            mockPiSDK.authenticate().then(authResult => {
+                userData.username = authResult.user.username;
+                userData.name = authResult.user.username.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                
+                updateUserInterface();
+                showScreen('mode-screen');
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }).catch(error => {
+                alert('Authentication failed. Please try again.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        });
+
+        // Mode Selection
+        document.getElementById('rider-mode').addEventListener('click', function() {
+            this.classList.add('selected');
+            document.getElementById('driver-mode').classList.remove('selected');
+            userData.mode = 'rider';
+            setTimeout(() => {
+                showScreen('rider-dashboard');
+            }, 300);
+        });
+
+        document.getElementById('driver-mode').addEventListener('click', function() {
+            this.classList.add('selected');
+            document.getElementById('rider-mode').classList.remove('selected');
+            userData.mode = 'driver';
+            setTimeout(() => {
+                showScreen('driver-dashboard');
+            }, 300);
+        });
+
+        // Trip Booking Flow
+        document.querySelectorAll('.trip-card').forEach(card => {
+            card.addEventListener('click', function() {
+                showScreen('trip-details');
+            });
+        });
+
+        // Action Buttons
+        document.getElementById('action-now').addEventListener('click', function() {
+            showScreen('trip-details');
+        });
+
+        document.getElementById('action-schedule').addEventListener('click', function() {
+            showScreen('schedule-screen');
+        });
+
+        document.getElementById('action-rideshare').addEventListener('click', function() {
+            showScreen('rideshare-screen');
+        });
+
+        document.getElementById('action-promote').addEventListener('click', function() {
+            showScreen('promoted-screen');
+        });
+
+        // Driver Action Buttons
+        document.getElementById('driver-action-now').addEventListener('click', function() {
+            alert('Driver trip listing feature coming soon!');
+        });
+
+        document.getElementById('driver-action-schedule').addEventListener('click', function() {
+            alert('Driver schedule feature coming soon!');
+        });
+
+        document.getElementById('driver-action-rideshare').addEventListener('click', function() {
+            alert('Driver rideshare feature coming soon!');
+        });
+
+        document.getElementById('driver-action-promote').addEventListener('click', function() {
+            showScreen('promoted-screen');
+        });
+
+        // Profile and Navigation
+        document.getElementById('profile-btn').addEventListener('click', function() {
+            showScreen('profile-screen');
+        });
+
+        document.getElementById('driver-profile-btn').addEventListener('click', function() {
+            showScreen('profile-screen');
+        });
+
+        document.getElementById('messages-btn').addEventListener('click', function() {
+            showScreen('messages-screen');
+        });
+
+        document.getElementById('driver-messages-btn').addEventListener('click', function() {
+            showScreen('messages-screen');
+        });
+
+        // Profile Menu Items
+        document.getElementById('profile-settings').addEventListener('click', function() {
+            showScreen('settings-screen');
+        });
+
+        document.getElementById('profile-wallet').addEventListener('click', function() {
+            showScreen('wallet-screen');
+        });
+
+        document.getElementById('profile-nft').addEventListener('click', function() {
+            showScreen('nft-screen');
+        });
+
+        // Conversation items
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            item.addEventListener('click', function() {
+                showScreen('chat-screen');
+            });
+        });
+
+        // Back Navigation
+        document.getElementById('back-from-trip').addEventListener('click', function() {
+            if (userData.mode === 'rider') {
+                showScreen('rider-dashboard');
+            } else {
+                showScreen('driver-dashboard');
+            }
+        });
+
+        document.getElementById('back-from-schedule').addEventListener('click', function() {
+            if (userData.mode === 'rider') {
+                showScreen('rider-dashboard');
+            } else {
+                showScreen('driver-dashboard');
+            }
+        });
+
+        document.getElementById('back-from-rideshare').addEventListener('click', function() {
+            if (userData.mode === 'rider') {
+                showScreen('rider-dashboard');
+            } else {
+                showScreen('driver-dashboard');
+            }
+        });
+
+        document.getElementById('back-from-nft').addEventListener('click', function() {
+            showScreen('profile-screen');
+        });
+
+        document.getElementById('back-from-profile').addEventListener('click', function() {
+            if (userData.mode === 'rider') {
+                showScreen('rider-dashboard');
+            } else {
+                showScreen('driver-dashboard');
+            }
+        });
+
+        document.getElementById('back-from-settings').addEventListener('click', function() {
+            showScreen('profile-screen');
+        });
+
+        document.getElementById('back-from-messages').addEventListener('click', function() {
+            if (userData.mode === 'rider') {
+                showScreen('rider-dashboard');
+            } else {
+                showScreen('driver-dashboard');
+            }
+        });
+
+        document.getElementById('back-from-chat').addEventListener('click', function() {
+            showScreen('messages-screen');
+        });
+
+        document.getElementById('back-from-wallet').addEventListener('click', function() {
+            showScreen('profile-screen');
+        });
+
+        document.getElementById('back-from-promoted').addEventListener('click', function() {
+            if (userData.mode === 'rider') {
+                showScreen('rider-dashboard');
+            } else {
+                showScreen('driver-dashboard');
+            }
+        });
+
+        // Payment Confirmation
+        document.getElementById('confirm-payment').addEventListener('click', function() {
+            showScreen('payment-processing');
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                alert('Payment successful! Your trip has been confirmed.');
+                if (userData.mode === 'rider') {
+                    showScreen('rider-dashboard');
+                } else {
+                    showScreen('driver-dashboard');
+                }
+            }, 3000);
+        });
+
+        // Toggle Switch for Driver Online Status
+        const toggle = document.querySelector('.toggle-input');
+        if (toggle) {
+            toggle.addEventListener('change', function() {
+                const statusIndicator = document.querySelector('.status-indicator');
+                if (this.checked) {
+                    statusIndicator.innerHTML = '<i class="fas fa-circle"></i> ONLINE';
+                    statusIndicator.className = 'status-indicator status-online';
+                } else {
+                    statusIndicator.innerHTML = '<i class="fas fa-circle"></i> OFFLINE';
+                    statusIndicator.className = 'status-indicator status-offline';
+                }
+            });
+        }
+
+        // Bottom Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const screenId = this.getAttribute('data-screen');
+                if (screenId) {
+                    showScreen(screenId);
+                }
+            });
+        });
+
+        // Schedule Options
+        document.querySelectorAll('.schedule-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.schedule-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // Payment Options
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.payment-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // Rideshare Cards
+        document.querySelectorAll('.rideshare-card').forEach(card => {
+            card.addEventListener('click', function() {
+                showScreen('trip-details');
+            });
+        });
+
+        // Wallet Actions
+        document.getElementById('wallet-add').addEventListener('click', function() {
+            alert('Add Pi feature coming soon!');
+        });
+
+        document.getElementById('wallet-send').addEventListener('click', function() {
+            alert('Send Pi feature coming soon!');
+        });
+
+        document.getElementById('wallet-withdraw').addEventListener('click', function() {
+            alert('Withdraw Pi feature coming soon!');
+        });
+
+        document.getElementById('wallet-history').addEventListener('click', function() {
+            alert('Transaction history feature coming soon!');
+        });
+
+        // Promoted Features
+        document.querySelectorAll('.promoted-feature').forEach(feature => {
+            feature.addEventListener('click', function() {
+                const featureName = this.querySelector('.promoted-feature-title').textContent;
+                const price = this.querySelector('.trip-price').textContent;
+                alert(`You selected: ${featureName} for ${price}`);
+            });
+        });
+
+        // Initialize the app
+        updateUserInterface();
+    </script>
+</body>
+</html>
